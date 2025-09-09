@@ -1,0 +1,271 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f9f9f9;
+  padding: 20px;
+}
+
+#app {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+header h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+.contadores {
+  background: #ecf0f1;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.contadores p {
+  margin: 5px 0;
+  font-weight: 500;
+}
+
+.status-disponivel {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.status-emprestado {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.filtros {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: end;
+}
+
+.filtros label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.filtros input,
+.filtros select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  min-width: 200px;
+}
+
+.formulario {
+  background: #f8f9fa;
+  padding: 25px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.formulario h2 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.campo-form {
+  margin-bottom: 20px;
+}
+
+.campo-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.campo-form input,
+.campo-form select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.campo-form input.invalido {
+  border-color: #e74c3c;
+  background-color: #fdf2f2;
+}
+
+.campo-form .erro {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}
+
+.botoes-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.botoes-form button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.botoes-form button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.botoes-form button:not(:disabled) {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-cancelar {
+  background-color: #e74c3c !important;
+}
+
+.listagem h2 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.mensagem-vazia {
+  text-align: center;
+  padding: 40px;
+  background: #fefefe;
+  border: 2px dashed #bdc3c7;
+  border-radius: 8px;
+  color: #7f8c8d;
+  font-size: 18px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table th,
+table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+table th {
+  background-color: #34495e;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.linha-disponivel {
+  background-color: #eafaf1;
+}
+
+.linha-emprestado {
+  background-color: #fdedec;
+}
+
+.badge-status {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.badge-status.status-disponivel {
+  background-color: #d5f5e3;
+  color: #27ae60;
+}
+
+.badge-status.status-emprestado {
+  background-color: #fadbd8;
+  color: #e74c3c;
+}
+
+.acoes {
+  display: flex;
+  gap: 8px;
+}
+
+.acoes button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.btn-editar {
+  background-color: #f39c12;
+  color: white;
+}
+
+.btn-editar:hover {
+  background-color: #d68910;
+}
+
+.btn-remover {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-remover:hover {
+  background-color: #c0392b;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .filtros {
+    flex-direction: column;
+  }
+  
+  .filtros input,
+  .filtros select {
+    min-width: auto;
+  }
+
+  table {
+    font-size: 14px;
+  }
+
+  table th,
+  table td {
+    padding: 10px 8px;
+  }
+}

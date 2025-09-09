@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo de Empréstimo de Equipamentos</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Importando Vue 3 via CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <!-- 
+    Nome Completo: OTÁVIO MANIEZZO
+  -->
+  <div id="app">
+    <!-- Cabeçalho -->
+    <header>
+      <h1>📚 Catálogo de Empréstimo de Equipamentos de Laboratório</h1>
+    </header>
+
+    <!-- Contadores Computados -->
+    <div class="contadores">
+      <p><strong>Total de Equipamentos:</strong> {{ totalEquipamentos }}</p>
+      <p><strong>Disponíveis:</strong> <span :class="{ 'status-disponivel': true }">{{ totalDisponiveis }}</span></p>
+      <p><strong>Emprestados:</strong> <span :class="{ 'status-emprestado': true }">{{ totalEmprestados }}</span></p>
+    </div>
+
+    <!-- Filtro por Categoria e Status -->
+    <div class="filtros">
+      <label for="filtroCategoria">Filtrar por Categoria:</label>
+      <input 
+        type="text" 
+        id="filtroCategoria" 
+        v-model="filtroCategoria" 
+        placeholder="Digite a categoria (ex: Informática)"
+        aria-label="Filtrar equipamentos por categoria"
+      >
+
+      <label for="filtroStatus">Filtrar por Status:</label>
+      <select 
+        id="filtroStatus" 
+        v-model="filtroStatus"
+        aria-label="Filtrar equipamentos por status"
+      >
+        <option value="">Todos</option>
+        <option value="disponível">Disponível</option>
+        <option value="emprestado">Emprestado</option>
+      </select>
+    </div>
+
+    <!-- Formulário de Cadastro/Edição -->
+    <section class="formulario">
+      <h2>{{ editando ? '✏️ Editar Equipamento' : '➕ Adicionar Novo Equipamento' }}</h2>
+      <form @submit.prevent="salvarEquipamento">
+        <!-- Campo Nome -->
+        <div class="campo-form">
+          <label for="nome">Nome do Equipamento *</label>
+          <input 
+            type="text" 
+            id="nome" 
+            v-model="equipamentoAtual.nome" 
+            :class="{ 'invalido': erroNome }"
+            aria-required="true"
+          >
+          <span v-if="erroNome" class="erro">Nome é obrigatório.</span>
+        </div>
+
+        <!-- Campo Categoria -->
+        <div class="campo-form">
+          <label for="categoria">Categoria *</label>
+          <input 
+            type="text" 
+            id="categoria" 
+            v-model="equipamentoAtual.categoria" 
+            :class="{ 'invalido': erroCategoria }"
+            aria-required="true"
+          >
+          <span v-if="erroCategoria" class="erro">Categoria é obrigatória.</span>
+        </div>
+
+        <!-- Campo Patrimônio -->
+        <div class="campo-form">
+          <label for="patrimonio">Patrimônio *</label>
+          <input 
+            type="text" 
+            id="patrimonio" 
+            v-model="equipamentoAtual.patrimonio" 
+            :class="{ 'invalido': erroPatrimonio }"
+            aria-required="true"
+          >
+          <span v-if="erroPatrimonio" class="erro">Patrimônio é obrigatório.</span>
+        </div>
+
+        <!-- Campo Status -->
+        <div class="campo-form">
+          <label for="status">Status *</label>
+          <select 
+            id="status" 
+            v-model="equipamentoAtual.status"
+            aria-required="true"
+          >
+            <option value="disponível">Disponível</option>
+            <option value="emprestado">Emprestado</option>
+          </select>
+        </div>
+
+        <!-- Botões -->
+        <div class="botoes-form">
+          <button 
+            type="submit" 
+            :disabled="!formularioValido"
+            :title="formularioValido ? '' : 'Preencha todos os campos obrigatórios'"
+          >
+            {{ editando ? '💾 Salvar Alterações' : '➕ Adicionar Equipamento' }}
+          </button>
+          <button 
+            type="button" 
+            v-if="editando" 
+            @click="cancelarEdicao"
+            class="btn-cancelar"
+          >
+            ❌ Cancelar Edição
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Listagem de Equipamentos -->
+    <section class="listagem">
+      <h2>📋 Lista de Equipamentos</h2>
+
+      <!-- Mensagem se lista estiver vazia -->
+      <div v-if="equipamentosFiltrados.length === 0" class="mensagem-vazia">
+        <p>📭 Nenhum equipamento encontrado. {{ filtroAtivo ? 'Ajuste os filtros ou' : '' }} Adicione o primeiro!</p>
+      </div>
+
+      <!-- Tabela de Equipamentos -->
+      <table v-else>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th>Patrimônio</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr 
+            v-for="equip in equipamentosFiltrados" 
+            :key="equip.id"
+            :class="{ 'linha-emprestado': equip.status === 'emprestado', 'linha-disponivel': equip.status === 'disponível' }"
+          >
+            <td>{{ equip.id }}</td>
+            <td>{{ equip.nome }}</td>
+            <td>{{ equip.categoria }}</td>
+            <td>{{ equip.patrimonio }}</td>
+            <td>
+              <span 
+                :class="[
+                  'badge-status',
+                  equip.status === 'disponível' ? 'status-disponivel' : 'status-emprestado'
+                ]"
+              >
+                {{ equip.status }}
+              </span>
+            </td>
+            <td class="acoes">
+              <button 
+                @click="editarEquipamento(equip)" 
+                class="btn-editar"
+                :aria-label="`Editar equipamento ${equip.nome}`"
+              >
+                ✏️ Editar
+              </button>
+              <button 
+                @click="removerEquipamento(equip.id)" 
+                class="btn-remover"
+                :aria-label="`Remover equipamento ${equip.nome}`"
+              >
+                🗑️ Remover
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- Script principal -->
+  <script src="main.js"></script>
+</body>
+</html>
